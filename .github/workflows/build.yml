@@ -38,9 +38,9 @@ jobs:
         - name: Docker build and push
           run: | 
               #run commands to build and push docker images
-              docker build --build-arg TMDB_V3_API_KEY=5742288f08c8d5c5f7afe89ef6a12c3b -t Netflix-clone .
-              docker tag Netflix-clone dubcygoat/Netflix-clone:latest
+              docker build --build-arg TMDB_V3_API_KEY=5742288f08c8d5c5f7afe89ef6a12c3b -t netflix-clone .
+              docker tag netflix-clone dubcygoat/netflix-clone:latest
               docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_TOKEN }}
-              docker push dubcygoat/Netflix-clone:latest
+              docker push dubcygoat/netflix-clone:latest
           env:
               DOCKER_CLI_ACI: 1
