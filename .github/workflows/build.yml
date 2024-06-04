@@ -40,8 +40,19 @@ jobs:
               #run commands to build and push docker images
               docker build --build-arg TMDB_V3_API_KEY=5742288f08c8d5c5f7afe89ef6a12c3b -t netflix-clone .
               docker tag netflix-clone dubcygoat/netflix-clone:latest
-              echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+              echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin #Best way to login to docker
               docker push dubcygoat/netflix-clone:latest
           env:
               DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
               DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+  Deploy:
+    name: Deploy to aws
+    needs: Docker
+    runs-on: [Netflix-Clone]
+    steps:
+        - name: pull the docker image
+          run: docker pull dubcygoat/netflix-clone:latest
+        - name: trivy image scan
+          run: trivy image dubcygoat/netflix-clone:latest
+        - name: run the container netflix-clone
+          run: docker run -d -p 8081:80 dubcygoat/netflix-clone:latest
